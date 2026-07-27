@@ -183,14 +183,16 @@
     margin:0 0 14px;
     color:var(--text);
   }
-  #project video, #project iframe{
-    width:100%;
-    border-radius:10px;
-    border:none;
-    display:block;
-    margin-bottom:14px;
-    background:#000;
-  }
+  #project video, #project iframe {
+    width: 100%;
+    height: auto; /* 고정된 height를 무시하고 가로 길이에 맞춰 세로를 조정 */
+    aspect-ratio: 16 / 9; /* 16:9 영상 비율 유지 */
+    border-radius: 10px;
+    border: none;
+    display: block;
+    margin-bottom: 14px;
+    background: #000;
+}
   #project p{
     margin:0 0 10px;
     color:var(--muted);
