@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이유정 | UI/UX Designer Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+        :root {
+            --primary-color: #9b2928;
+            --primary-hover: #7a201f;
+            --text-color: #2b2b2b;
+            --bg-color: #ffffff;
+            --body-bg: #f8f9fa;
+            --border-color: #eaeaea;
+        }
+
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+        body { font-family: 'Montserrat', 'Pretendard', sans-serif; background-color: var(--body-bg); color: var(--text-color); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+
+        /* 내비게이션 바 */
+        .sticky-nav { position: fixed; top: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); box-shadow: 0 1px 10px rgba(0,0,0,0.05); z-index: 1000; display: flex; justify-content: center; padding: 18px 0; }
+        .nav-links { display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; }
+        .nav-links a { text-decoration: none; color: #555; font-weight: 700; font-size: 13px; letter-spacing: 1.5px; transition: color 0.3s ease; }
+        .nav-links a:hover { color: var(--primary-color); }
+
+        .site-container { width: 100%; max-width: 1100px; margin-top: 80px; padding: 20px; box-sizing: border-box; }
+        .section { background-color: var(--bg-color); border-radius: 12px; padding: 60px 70px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+        .section-title { color: var(--primary-color); font-size: 20px; font-weight: 800; margin-top: 0; margin-bottom: 45px; letter-spacing: 1.5px; text-transform: uppercase; text-align: center; }
+        .section-title span { display: inline-block; border-bottom: 3px solid var(--primary-color); padding-bottom: 8px; }
+
+        /* --- Header / About --- */
+        .header-content { display: flex; justify-content: space-between; align-items: center; gap: 50px; }
+        .header-left { display: flex; align-items: center; gap: 30px; }
+        .vertical-text { writing-mode: vertical-rl; text-align: center; margin: 0; line-height: 1.1; }
+        .vertical-text .title { font-size: 15px; color: #888; font-weight: 600; letter-spacing: 2px; }
+        .vertical-text .name { font-size: 42px; color: var(--primary-color); font-weight: 800; letter-spacing: 5px; margin-top: 15px; }
+        
+        .profile-image { width: 200px; height: 260px; background-color: #f0f0f0; border-radius: 8px; overflow: hidden; box-shadow: 6px 6px 0px rgba(155, 41, 40, 0.08); transition: transform 0.3s ease; }
+        .profile-image:hover { transform: translateY(-5px); }
+        .profile-image img { width: 100%; height: 100%; object-fit: cover; }
+
+        .header-right { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .contact-info { list-style: none; padding: 0; margin: 0 0 25px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 25px; }
+        .contact-info li { margin-bottom: 12px; font-size: 15px; display: flex; align-items: center; gap: 15px; color: #444; font-weight: 500; }
+        .contact-info i { color: var(--primary-color); font-size: 16px; width: 24px; text-align: center; }
+        
+        .objective { font-size: 15px; line-height: 1.7; color: #555; word-break: keep-all; font-family: 'Pretendard', sans-serif; margin-bottom: 30px; }
+        .cta-group { display: flex; gap: 15px; }
+        .btn { padding: 12px 24px; font-size: 14px; font-weight: 700; text-decoration: none; border-radius: 6px; transition: all 0.3s ease; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background-color: var(--primary-color); color: white; border: 1px solid var(--primary-color); }
+        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(155, 41, 40, 0.2); }
+        .btn-outline { background-color: white; color: var(--primary-color); border: 1px solid var(--primary-color); }
+        .btn-outline:hover { background-color: var(--primary-color); color: white; transform: translateY(-2px); }
+
+        /* --- PORTFOLIO (Pinterest Masonry Style) --- */
+        .portfolio-grid {
+            column-count: 3; /* 세로 다단 편집 (3열) */
+            column-gap: 30px; /* 열 사이 간격 */
+        }
+
+        .portfolio-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid; /* 카드가 열 중간에 잘리지 않도록 방지 */
+            margin-bottom: 30px; /* 카드 아래 간격 */
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            border-color: transparent;
+        }
+
+        .portfolio-thumb {
+            width: 100%;
+            background-color: #f4f4f4;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .portfolio-thumb img {
+            width: 100%;
+            height: auto; /* 원본 비율 유지 */
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .portfolio-card:hover .portfolio-thumb img {
+            transform: scale(1.03); 
+        }
+
+        .portfolio-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .portfolio-title {
+            font-weight: 800;
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: #222;
+            word-break: keep-all;
+        }
+
+        .portfolio-desc {
+            font-size: 13px;
+            color: #777;
+            line-height: 1.5;
+            font-family: 'Pretendard', sans-serif;
+            word-break: keep-all;
+        }
+
+        /* --- Skills & Languages --- */
+        .skills-container { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        .sub-title { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 25px; border-left: 3px solid var(--primary-color); padding-left: 10px; }
+        .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .skills-grid div { font-size: 13.5px; color: #444; font-weight: 600; background-color: #f8f9fa; padding: 12px 15px; border-radius: 6px; transition: all 0.3s ease; text-align: center; border: 1px solid #eee; }
+        .skills-grid div:hover { background-color: var(--primary-color); color: white; transform: translateY(-2px); }
+        .language-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; font-size: 14.5px; font-weight: 700; background-color: #f8f9fa; padding: 15px 20px; border-radius: 6px; border: 1px solid #eee; }
+        .language-name { color: #333; }
+        .language-sub { font-size: 12px; color: #888; font-weight: 400; margin-left: 8px; }
+        .dots { display: flex; gap: 6px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--primary-color); }
+        .dot.filled { background-color: var(--primary-color); }
+
+        /* --- 모달 --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: white; padding: 40px; border-radius: 12px; max-width: 800px; width: 90%; max-height: 85vh; overflow-y: auto; position: relative; transform: translateY(20px); transition: all 0.3s ease; }
+        .modal-content::-webkit-scrollbar { width: 8px; }
+        .modal-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-close { position: absolute; top: 20px; right: 25px; font-size: 28px; cursor: pointer; color: #888; z-index: 10; }
+        .modal-close:hover { color: var(--primary-color); }
+        .modal-images { display: flex; flex-direction: column; gap: 20px; margin-bottom: 25px; }
+        .modal-images img { width: 100%; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+
+        /* 반응형 */
+        @media screen and (max-width: 950px) {
+            .portfolio-grid { column-count: 2; }
+            .header-content { flex-direction: column; text-align: center; }
+            .header-left { flex-direction: column; gap: 20px; }
+            .vertical-text { writing-mode: horizontal-tb; }
+            .contact-info li { justify-content: center; }
+            .cta-group { justify-content: center; }
+            .skills-container { grid-template-columns: 1fr; gap: 40px; }
+            .section { padding: 40px 30px; }
+        }
+        @media screen and (max-width: 600px) {
+            .portfolio-grid { column-count: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sticky-nav">
+        <ul class="nav-links">
+            <li><a href="#about">ABOUT</a></li>
+            <li><a href="#portfolio">PORTFOLIO</a></li>
+            <li><a href="#skills">SKILLS</a></li>
+        </ul>
+    </nav>
+
+    <div class="site-container">
+        
+        <section class="section" id="about">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="vertical-text">
+                        <span class="title">UI/UX DESIGNER</span> <br> 
+                        <span class="name">이 유 정</span>
+                    </h1>
+                    <div class="profile-image">
+                        <img src="IMG_2719.jpg" alt="Profile">
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <ul class="contact-info">
+                        <li><i class="far fa-envelope"></i> lyj_1122@naver.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Busan, South Korea</li>
+                        <li><i class="fas fa-phone-alt"></i> +82 10-2878-4776</li>
+                    </ul>
+                    <p class="objective">
+                        사용자 경험(UX) 분석과 에디토리얼 디자인을 결합하여 가치 있는 로컬 브랜딩 및 시각 결과물을 창출합니다. 기획부터 시각화까지 아우르는 끈기 있는 디자이너로서, 글로벌 감각을 바탕으로 일본 디자인 업계 진출을 목표로 성장하고 있습니다.
+                    </p>
+                    <div class="cta-group">
+                        <a href="#" class="btn btn-primary"><i class="fas fa-download"></i> PDF 다운로드</a>
+                        <a href="mailto:lyj_1122@naver.com" class="btn btn-outline"><i class="fas fa-paper-plane"></i> 메일 보내기</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PORTFOLIO SECTION -->
+        <section class="section" id="portfolio">
+            <h2 class="section-title"><span>PORTFOLIO</span></h2>
+            
+            <div class="portfolio-grid">
+                
+                <!-- 파일명 수정 적용 완료 -->
+                <div class="portfolio-card" onclick='openModal("대저로운 하루 로컬 브랜딩", "토마토 호텔 콘셉트 기획, 커뮤니티 주도형 스탬프 투어 및 굿즈 패키지 디자인", ["daejeo-01.jpg", "daejeo-02.jpg"])'>
+                    <div class="portfolio-thumb">
+                        <img src="daejeo-01.jpg" alt="대저로운 하루">
+                    </div>
+                    <div class="portfolio-info">
+                        <div class="portfolio-title">'대저로운 하루' 로컬 브랜딩</div>
+                        <div class="portfolio-desc">공간 기획 및 굿즈 패키지 디자인</div>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick='openModal("2027 붉은 양띠 해 글로벌 브랜드", "숫자 12를 모티브로 한 십이간지 패키지 및 글로벌 상품 웹 기획 디자인", ["ux-ui-main.jpg"])'>
+                    <div class="portfolio-thumb">
+                        <img src="ux-ui-main.jpg" alt="UX UI 메인">
+                    </div>
+                    <div class="portfolio-info">
+                        <div class="portfolio-title">2027 붉은 양띠 해 기획</div>
+                        <div class="portfolio-desc">웹/앱 UX·UI 및 프로모션 디자인</div>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick='openModal("A MONOTONOUS LIFE 단행본", "개인 서적 에디토리얼 디자인 및 일러스트레이션 작업", ["cover-01.jpg", "cover-02.jpg"])'>
+                    <div class="portfolio-thumb">
+                        <img src="cover-01.jpg" alt="단행본 표지">
+                    </div>
+                    <div class="portfolio-info">
+                        <div class="portfolio-title">단행본 출판 프로젝트</div>
+                        <div class="portfolio-desc">에디토리얼 디자인 및 일러스트</div>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick='openModal("광안리 썸머 뮤직 페스티벌", "시원한 타이포그래피와 여름 무드를 활용한 페스티벌 포스터 디자인", ["festival.jpg"])'>
+                    <div class="portfolio-thumb">
+                        <img src="festival.jpg" alt="페스티벌 포스터">
+                    </div>
+                    <div class="portfolio-info">
+                        <div class="portfolio-title">썸머 뮤직 페스티벌</div>
+                        <div class="portfolio-title" style="font-size: 13px; color:#777;">그래픽 포스터 디자인</div>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick='openModal("Endless Future 포스터", "리본과 별빛 오브제를 활용한 감각적인 타이포그래피 그래픽 포스터 디자인", ["endless-future.jpg"])'>
+                    <div class="portfolio-thumb">
+                        <img src="endless-future.jpg" alt="엔들리스 퓨처 포스터">
+                    </div>
+                    <div class="portfolio-info">
+                        <div class="portfolio-title">Endless Future</div>
+                        <div class="portfolio-desc">타이포그래피 포스터 디자인</div>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick='openModal("부산의 빛 엽서 일러스트", "광안대교와 불꽃놀이를 테마로 한 부산 로컬 관광 엽서 일러스트", ["busan-light.jpg"])'>
+                    <div class="portfolio-thumb">
+                        <img src="busan-light.jpg" alt="부산 엽서">
+                    </div>
+                    <div class="portfolio-info">
+                        <div class="portfolio-title">부산의 빛 (로컬 엽서)</div>
+                        <div class="portfolio-desc">디지털 드로잉 및 일러스트레이션</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SKILLS SECTION -->
+        <section class="section" id="skills">
+            <h2 class="section-title"><span>EXPERTISE</span></h2>
+            <div class="skills-container">
+                <div>
+                    <h3 class="sub-title">Design & Tools</h3>
+                    <div class="skills-grid">
+                        <div>UX/UI Analysis</div>
+                        <div>Editorial Design</div>
+                        <div>Brand Identity</div>
+                        <div>Local Branding</div>
+                        <div>Adobe Photoshop</div>
+                        <div>Adobe Illustrator</div>
+                        <div>Adobe After Effects</div>
+                        <div>Generative AI</div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="sub-title">Languages</h3>
+                    <div class="language-item">
+                        <div>JAPANESE <span class="language-sub">JLPT N2</span></div>
+                        <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div>
+                    </div>
+                    <div class="language-item">
+                        <div>ENGLISH <span class="language-sub">Business</span></div>
+                        <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- 모달 -->
+    <div class="modal-overlay" id="projectModal" onclick="closeModal(event)">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close" onclick="closeModal(event, true)"></i>
+            <h2 id="modalTitle" style="margin-top: 0; margin-bottom: 5px; color: var(--primary-color);">프로젝트 제목</h2>
+            <p id="modalDesc" style="color: #555; line-height: 1.6; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 20px;">프로젝트 상세 설명</p>
+            <div class="modal-images" id="modalImagesContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('projectModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalImagesContainer = document.getElementById('modalImagesContainer');
+
+        function openModal(title, desc, imageArray) {
+            modalTitle.innerText = title;
+            modalDesc.innerText = desc;
+            modalImagesContainer.innerHTML = '';
+            
+            imageArray.forEach(function(imgSrc) {
+                const imgElement = document.createElement('img');
+                imgElement.src = imgSrc;
+                imgElement.alt = title;
+                modalImagesContainer.appendChild(imgElement);
+            });
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, force = false) {
+            if (force || event.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+</body>
+</html>
