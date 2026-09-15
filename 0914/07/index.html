@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Image Resizer - NanaLab</title>
+  <meta name="description" content="원하는 비율(1:1, 3:4, 4:3, 9:16, 16:9, 커스텀)로 여백 채우기(Padding) 또는 자르기(Crop)를 통해 이미지를 스마트하게 리사이징하고 일괄 ZIP 다운로드하세요.">
+  
+  <!-- Google Fonts: Inter & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Vendor JSZip -->
+  <script src="vendor/jszip.min.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="https://nanalab.kr" target="_blank" rel="noopener noreferrer" class="logo-link" title="NanaLab 홈페이지로 이동">
+        <img src="logo.png" alt="NanaLab Logo" class="brand-logo" id="headerLogo">
+      </a>
+      <div class="header-title-box">
+        <span class="badge-tag">NanaLab Tool</span>
+        <h1 class="app-title" id="appTitle">Smart Image Resizer</h1>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+    <!-- Intro Banner -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h2 class="hero-heading">스마트 이미지 종횡비 변환기</h2>
+        <p class="hero-desc">인스타그램, 유튜브 쇼츠, 블로그 등 플랫폼 규격에 맞춰 여백(Padding) 또는 크롭(Crop)으로 손쉽게 리사이즈하세요.</p>
+      </div>
+    </section>
+
+    <!-- Controls & Configuration Section -->
+    <section class="config-panel card">
+      <div class="panel-header">
+        <div class="panel-title-wrapper">
+          <svg class="panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+          <h3>변환 옵션 설정</h3>
+        </div>
+        <span class="panel-hint">옵션을 변경하면 업로드된 이미지에 실시간 재적용됩니다</span>
+      </div>
+
+      <div class="config-grid">
+        <!-- 1. Canvas Aspect Ratio -->
+        <div class="config-group" id="ratioSection">
+          <label class="group-label">
+            <span class="label-number">1</span>
+            캔버스 비율 선택
+          </label>
+          <div class="ratio-button-group" role="radiogroup" aria-label="캔버스 종횡비">
+            <button type="button" class="ratio-btn active" data-ratio="1:1" role="radio" aria-checked="true">
+              <span class="ratio-name">1:1</span>
+              <span class="ratio-sub">정방형 (피드)</span>
+            </button>
+            <button type="button" class="ratio-btn" data-ratio="3:4" role="radio" aria-checked="false">
+              <span class="ratio-name">3:4</span>
+              <span class="ratio-sub">세로 인물형</span>
+            </button>
+            <button type="button" class="ratio-btn" data-ratio="4:3" role="radio" aria-checked="false">
+              <span class="ratio-name">4:3</span>
+              <span class="ratio-sub">가로 표준</span>
+            </button>
+            <button type="button" class="ratio-btn" data-ratio="9:16" role="radio" aria-checked="false">
+              <span class="ratio-name">9:16</span>
+              <span class="ratio-sub">스토리/릴스/쇼츠</span>
+            </button>
+            <button type="button" class="ratio-btn" data-ratio="16:9" role="radio" aria-checked="false">
+              <span class="ratio-name">16:9</span>
+              <span class="ratio-sub">와이드/유튜브</span>
+            </button>
+            <button type="button" class="ratio-btn" data-ratio="custom" role="radio" aria-checked="false">
+              <span class="ratio-name">커스텀</span>
+              <span class="ratio-sub">직접 입력</span>
+            </button>
+          </div>
+
+          <!-- Custom Ratio Inputs -->
+          <div class="custom-ratio-container" id="customRatioContainer">
+            <div class="custom-input-wrap">
+              <label for="customWidth">가로 비율</label>
+              <input type="number" id="customWidth" min="1" max="10000" value="5" placeholder="5">
+            </div>
+            <span class="ratio-colon">:</span>
+            <div class="custom-input-wrap">
+              <label for="customHeight">세로 비율</label>
+              <input type="number" id="customHeight" min="1" max="10000" value="7" placeholder="7">
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="applyCustomRatioBtn">비율 적용</button>
+          </div>
+        </div>
+
+        <!-- 2. Resize Mode (Padding vs Crop) -->
+        <div class="config-group" id="modeSection">
+          <label class="group-label">
+            <span class="label-number">2</span>
+            변환 방식 (모드)
+          </label>
+          <div class="mode-toggle-group">
+            <label class="mode-card active" id="modePaddingLabel">
+              <input type="radio" name="resizeMode" value="padding" checked id="modePadding">
+              <div class="mode-visual padding-visual">
+                <div class="visual-canvas">
+                  <div class="visual-inner fit-inner"></div>
+                </div>
+              </div>
+              <div class="mode-info">
+                <span class="mode-title">여백 채우기 (Padding)</span>
+                <span class="mode-desc">원본 잘림 없이 전체 유지, 남는 공간 여백 생성</span>
+              </div>
+            </label>
+
+            <label class="mode-card" id="modeCropLabel">
+              <input type="radio" name="resizeMode" value="crop" id="modeCrop">
+              <div class="mode-visual crop-visual">
+                <div class="visual-canvas">
+                  <div class="visual-inner crop-inner"></div>
+                </div>
+              </div>
+              <div class="mode-info">
+                <span class="mode-title">자르기 (Crop)</span>
+                <span class="mode-desc">캔버스에 꽉 채우고 초과 영역을 중앙 기준 잘라내기</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 3. Margin Background Color (Active on Padding) -->
+        <div class="config-group" id="colorSection">
+          <label class="group-label">
+            <span class="label-number">3</span>
+            여백 배경색
+            <span class="tag-helper" id="colorHelperTag">(Padding 전용)</span>
+          </label>
+          
+          <div class="color-picker-wrap">
+            <div class="color-preview-box">
+              <input type="color" id="marginColorPicker" value="#ffffff" title="커스텀 색상 선택">
+              <input type="text" id="marginColorHex" value="#FFFFFF" maxlength="9" placeholder="#FFFFFF">
+            </div>
+
+            <div class="color-presets">
+              <button type="button" class="color-preset-btn active" data-color="#ffffff" style="background-color: #ffffff;" title="흰색 (기본값)"></button>
+              <button type="button" class="color-preset-btn" data-color="#000000" style="background-color: #000000;" title="검정색"></button>
+              <button type="button" class="color-preset-btn" data-color="#1e293b" style="background-color: #1e293b;" title="슬레이트 다크"></button>
+              <button type="button" class="color-preset-btn" data-color="#e2e8f0" style="background-color: #e2e8f0;" title="소프트 그레이"></button>
+              <button type="button" class="color-preset-btn" data-color="#fef3c7" style="background-color: #fef3c7;" title="웜 베이지"></button>
+              <button type="button" class="color-preset-btn" data-color="transparent" title="투명 배경 (PNG 자동 설정)">
+                <span class="checkerboard-icon"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Quality & Output Options -->
+        <div class="config-group" id="qualitySection">
+          <label class="group-label">
+            <span class="label-number">4</span>
+            출력 포맷 및 해상도
+          </label>
+          <div class="format-select-wrap">
+            <div class="select-field">
+              <label for="outputFormat">저장 포맷</label>
+              <select id="outputFormat">
+                <option value="original">원본 포맷 유지 (기본)</option>
+                <option value="image/png">PNG (무손실/투명)</option>
+                <option value="image/jpeg">JPEG (고압축)</option>
+                <option value="image/webp">WebP (최신 규격)</option>
+              </select>
+            </div>
+            <div class="select-field">
+              <label for="outputResolution">해상도 기준</label>
+              <select id="outputResolution">
+                <option value="auto">원본 크기 기준 (고화질 유지)</option>
+                <option value="1080">FHD (긴 변 1080px)</option>
+                <option value="1440">2K (긴 변 1440px)</option>
+                <option value="2160">4K (긴 변 2160px)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upload Section (Drag & Drop Zone) -->
+    <section class="upload-section">
+      <div class="drop-zone card" id="dropZone">
+        <input type="file" id="fileInput" multiple accept="image/*" class="file-input-hidden">
+        
+        <div class="drop-zone-content">
+          <div class="upload-icon-pulse">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <h3 class="drop-zone-title">이미지를 여기에 드래그 앤 드롭하세요</h3>
+          <p class="drop-zone-sub">또는 아래 버튼을 눌러 사진 파일을 선택하세요 (복수 선택 가능)</p>
+          <div class="drop-zone-actions">
+            <button type="button" class="btn btn-primary" id="browseBtn">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              사진 파일 선택하기
+            </button>
+            <button type="button" class="btn btn-outline" id="loadSampleBtn">
+              샘플 이미지로 체험
+            </button>
+          </div>
+          <span class="file-format-hint">지원 형식: JPG, PNG, WEBP, GIF, SVG, BMP 등 (무제한 다중 처리 지원)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Queue & Results Section -->
+    <section class="queue-section" id="queueSection">
+      <div class="queue-header card">
+        <div class="queue-summary">
+          <div class="summary-title-row">
+            <h3 class="queue-title">작업 대기열</h3>
+            <span class="count-badge" id="queueCountBadge">0개 이미지</span>
+          </div>
+          <p class="queue-desc" id="queueStatusDesc">사진을 추가하면 자동으로 리사이즈 처리가 시작됩니다.</p>
+        </div>
+
+        <div class="queue-actions">
+          <button type="button" class="btn btn-outline btn-sm" id="reprocessAllBtn" title="현재 설정으로 전체 다시 처리">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"/>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+            설정 재적용
+          </button>
+          <button type="button" class="btn btn-danger-outline btn-sm" id="clearAllBtn" title="목록 전체 비우기">
+            전체 비우기
+          </button>
+          <!-- Batch Download Button (Zip) -->
+          <button type="button" class="btn btn-success" id="batchZipBtn" disabled title="모든 이미지 처리가 100% 완료되면 일괄 ZIP 다운로드 가능">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span id="batchZipText">일괄 다운로드 (.ZIP)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Items List -->
+      <div class="items-list" id="itemsList">
+        <!-- Empty State View -->
+        <div class="empty-queue" id="emptyQueue">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <p>아직 추가된 사진이 없습니다. 위 드롭존에 사진을 끌어다 놓아보세요!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Image Preview Modal -->
+  <div class="modal-backdrop" id="previewModal" role="dialog" aria-hidden="true">
+    <div class="modal-window card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h4 id="modalTitle">이미지 비교 미리보기</h4>
+          <span class="modal-meta" id="modalMeta"></span>
+        </div>
+        <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="닫기">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="preview-comparison">
+          <div class="preview-pane">
+            <span class="pane-label">원본 사진</span>
+            <div class="pane-img-box">
+              <img id="modalOrigImg" alt="원본 이미지">
+            </div>
+          </div>
+          <div class="preview-pane">
+            <span class="pane-label">리사이즈 결과물</span>
+            <div class="pane-img-box checker-bg">
+              <img id="modalResultImg" alt="변환된 이미지">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a id="modalDownloadLink" class="btn btn-primary" download>개별 다운로드</a>
+        <button type="button" class="btn btn-outline" id="modalCloseBtnFooter">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>&copy; 2026 <a href="https://nanalab.kr" target="_blank" rel="noopener noreferrer">NanaLab</a>. All rights reserved. <strong>Smart Image Resizer</strong></p>
+    </div>
+  </footer>
+
+  <!-- App Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>

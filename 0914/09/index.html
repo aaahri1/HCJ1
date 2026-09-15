@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smart GIF Studio — Free GIF Editor</title>
+<link rel="icon" href="logo.png" type="image/png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="fileProtocolWarning" class="file-protocol-warning" hidden>
+  <strong>이 페이지가 <code>file://</code>로 열려 있습니다.</strong>
+  GIF 처리는 Web Worker를 사용하므로 이 상태에서는 동작하지 않습니다. 터미널에서 이 폴더로 이동해
+  <code>python3 -m http.server 8765</code> 를 실행한 뒤, 브라우저에서 <code>http://localhost:8765</code> 로 접속해 주세요.
+</div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo-link" href="https://nanalab.kr" target="_blank" rel="noopener noreferrer" aria-label="Nanalab home">
+      <img src="logo.png" alt="Nanalab logo" class="logo-img" />
+    </a>
+    <span class="brand-name">Smart GIF Studio</span>
+  </div>
+</header>
+
+<main class="main">
+
+  <section id="intro" class="intro">
+    <span class="intro-badge">100% Free &middot; Runs in Your Browser</span>
+    <h1 class="intro-title">Free GIF Editor</h1>
+    <p class="intro-desc">
+      Edit your GIF files for free! Resizing, downscaling, cropping, FPS adjustment,
+      and many other features are all provided free of charge.
+    </p>
+
+    <div class="privacy-card">
+      <svg class="privacy-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L4 5V11C4 16.55 7.84 21.74 12 23C16.16 21.74 20 16.55 20 11V5L12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 12L11 14L15.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p class="privacy-text">
+        All data is processed only in your computer's browser. Since no data is ever
+        sent externally, you can use it with complete peace of mind — no risk of data leaks.
+      </p>
+    </div>
+
+    <div id="dropzone" class="dropzone">
+      <div class="dropzone-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 16V4M12 4L7 9M12 4L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 16V18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <p class="dropzone-text">Drag &amp; drop a GIF file here</p>
+      <p class="dropzone-or">or</p>
+      <button type="button" id="chooseFileBtn" class="btn-primary">Choose File</button>
+      <input type="file" id="fileInput" accept="image/gif" hidden />
+    </div>
+  </section>
+
+  <section id="editor" class="editor" hidden>
+    <div class="editor-left" id="editorLeft">
+
+      <div class="panel-box" id="originalPanel">
+        <div class="panel-header">
+          <button type="button" class="collapse-toggle" id="toggleOriginalPanel" aria-expanded="true" aria-label="Collapse Original GIF panel">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="panel-heading-text">
+            <h2 class="panel-name">Original GIF</h2>
+            <span id="fileName" class="panel-filename"></span>
+          </div>
+          <div class="panel-actions">
+            <button type="button" id="downloadOriginalBtn" class="btn-icon-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v12M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Download
+            </button>
+            <button type="button" id="newFileBtn" class="btn-ghost">Choose Another File</button>
+          </div>
+        </div>
+        <div class="panel-body" id="originalPanelBody">
+          <div class="preview-frame">
+            <img id="gifPreview" src="" alt="Uploaded GIF preview" />
+          </div>
+          <div class="info-stats" id="originalStats"></div>
+        </div>
+      </div>
+
+      <div class="panel-box" id="outputPanel" hidden>
+        <div class="panel-header">
+          <button type="button" class="collapse-toggle" id="toggleOutputPanel" aria-expanded="true" aria-label="Collapse output panel">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="panel-heading-text">
+            <h2 class="panel-name" id="outputPanelTitle">Output GIF</h2>
+          </div>
+          <div class="panel-actions">
+            <button type="button" id="downloadOutputBtn" class="btn-icon-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v12M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Download
+            </button>
+          </div>
+        </div>
+        <div class="panel-body" id="outputPanelBody">
+          <div class="preview-frame">
+            <img id="outputPreview" src="" alt="Output preview" />
+            <video id="outputVideoPreview" controls loop hidden></video>
+          </div>
+          <div class="info-stats" id="outputStats"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="editor-panel">
+
+      <div class="tools-view" id="toolsView">
+        <h2 class="panel-title">Editor Tools</h2>
+        <div class="tools-grid">
+          <button type="button" class="tool-btn" id="resizeToolBtn" data-tool="resize">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Resize</span>
+          </button>
+          <button type="button" class="tool-btn" id="cropToolBtn" data-tool="crop">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 2v14a2 2 0 002 2h14M18 22V8a2 2 0 00-2-2H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Crop</span>
+          </button>
+          <button type="button" class="tool-btn" id="downsizingToolBtn" data-tool="downsizing">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 3v3a2 2 0 01-2 2H3M21 8h-3a2 2 0 01-2-2V3M3 16h3a2 2 0 012 2v3M16 21v-3a2 2 0 012-2h3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Downsizing</span>
+          </button>
+          <button type="button" class="tool-btn" id="formatToolBtn" data-tool="format">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Format Convert</span>
+          </button>
+          <button type="button" class="tool-btn" id="rotateToolBtn" data-tool="rotate">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23 4v6h-6M20.49 15a9 9 0 11-2.12-9.36L23 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Rotate</span>
+          </button>
+          <button type="button" class="tool-btn" id="optimizeToolBtn" data-tool="optimize">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Optimize</span>
+          </button>
+          <button type="button" class="tool-btn" id="reverseToolBtn" data-tool="reverse">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 8h13M7 8l4-4M7 8l4 4M17 16H4M17 16l-4-4M17 16l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Reverse</span>
+          </button>
+          <button type="button" class="tool-btn" id="speedToolBtn" data-tool="speed">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Speed</span>
+          </button>
+          <button type="button" class="tool-btn" id="cutToolBtn" data-tool="cut">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="3" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="2"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Cut</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="tool-detail" id="resizeView" hidden>
+        <h2 class="panel-title">Resize</h2>
+
+        <div class="resize-axis">
+          <div class="axis-row">
+            <span class="axis-icon" title="Width">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12h18M3 12l4-4M3 12l4 4M21 12l-4-4M21 12l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <input type="range" id="resizeXSlider" class="axis-slider" />
+            <span class="axis-value" id="resizeXValue"></span>
+          </div>
+
+          <div class="lock-row">
+            <button type="button" id="aspectLockBtn" class="lock-btn" aria-pressed="true" aria-label="Toggle aspect ratio lock">
+              <svg id="lockIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <div class="axis-row">
+            <span class="axis-icon" title="Height">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v18M12 3l-4 4M12 3l4 4M12 21l-4-4M12 21l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <input type="range" id="resizeYSlider" class="axis-slider" />
+            <span class="axis-value" id="resizeYValue"></span>
+          </div>
+        </div>
+
+        <div class="tool-actions">
+          <button type="button" id="resizeBackBtn" class="btn-ghost">Back</button>
+          <button type="button" id="resizeGoBtn" class="btn-primary">Go!</button>
+        </div>
+      </div>
+
+      <div class="tool-detail" id="cropView" hidden>
+        <h2 class="panel-title">Crop</h2>
+
+        <div class="field-group">
+          <span class="field-label">Aspect Ratio</span>
+          <div class="chip-row" id="cropRatioChips">
+            <button type="button" class="chip active" data-ratio="1">1:1</button>
+            <button type="button" class="chip" data-ratio="1.3333333333333333">4:3</button>
+            <button type="button" class="chip" data-ratio="0.75">3:4</button>
+            <button type="button" class="chip" data-ratio="1.7777777777777777">16:9</button>
+            <button type="button" class="chip" data-ratio="0.5625">9:16</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label">Empty Space</span>
+          <div class="segmented" id="cropModeSegmented">
+            <button type="button" class="segmented-btn active" data-mode="fill">Fill (Zoom &amp; Crop)</button>
+            <button type="button" class="segmented-btn" data-mode="pad">Pad (Solid Color)</button>
+          </div>
+        </div>
+
+        <div class="field-group" id="cropPadOptions" hidden>
+          <span class="field-label">Pad Color</span>
+          <div class="pad-color-row">
+            <input type="color" id="cropPadColor" value="#ffffff" />
+            <label class="checkbox-row">
+              <input type="checkbox" id="cropPadTransparent" />
+              <span>Transparent</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="tool-actions">
+          <button type="button" id="cropBackBtn" class="btn-ghost">Back</button>
+          <button type="button" id="cropGoBtn" class="btn-primary">Go!</button>
+        </div>
+      </div>
+
+      <div class="tool-detail" id="downsizingView" hidden>
+        <h2 class="panel-title">Downsizing</h2>
+
+        <div class="option-group">
+          <label class="checkbox-row">
+            <input type="checkbox" id="dsScaleCheck" />
+            <span>Scale down dimensions</span>
+          </label>
+          <div class="option-control" id="dsScaleControl" hidden>
+            <input type="range" id="dsScaleSlider" min="10" max="90" value="50" step="5" class="axis-slider" />
+            <span class="axis-value" id="dsScaleValue">50%</span>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <label class="checkbox-row">
+            <input type="checkbox" id="dsFramesCheck" />
+            <span>Remove frames</span>
+          </label>
+          <div class="option-control" id="dsFramesControl" hidden>
+            <input type="range" id="dsFramesSlider" min="2" max="10" value="2" step="1" class="axis-slider" />
+            <span class="axis-value" id="dsFramesValue">Keep 1 of 2</span>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <label class="checkbox-row">
+            <input type="checkbox" id="dsColorsCheck" />
+            <span>Reduce color count</span>
+          </label>
+          <div class="option-control" id="dsColorsControl" hidden>
+            <input type="range" id="dsColorsSlider" min="1" max="8" value="8" step="1" class="axis-slider" />
+            <span class="axis-value" id="dsColorsValue">256 colors</span>
+          </div>
+        </div>
+
+        <div class="tool-actions">
+          <button type="button" id="dsBackBtn" class="btn-ghost">Back</button>
+          <button type="button" id="dsGoBtn" class="btn-primary" disabled>Go!</button>
+        </div>
+      </div>
+
+      <div class="tool-detail" id="formatView" hidden>
+        <h2 class="panel-title">Format Convert</h2>
+
+        <div class="field-group">
+          <span class="field-label">Convert To</span>
+          <div class="segmented" id="formatTypeSegmented">
+            <button type="button" class="segmented-btn active" data-format="jpg">JPG Image</button>
+            <button type="button" class="segmented-btn" data-format="mp4">MP4 Video</button>
+          </div>
+        </div>
+
+        <div class="field-group" id="formatJpgOptions">
+          <span class="field-label">JPG Quality</span>
+          <div class="option-control">
+            <input type="range" id="formatJpgQuality" min="10" max="100" value="85" step="5" class="axis-slider" />
+            <span class="axis-value" id="formatJpgQualityValue">85%</span>
+          </div>
+        </div>
+
+        <p class="field-hint" id="formatMp4Hint" hidden>
+          MP4 conversion records the animation in real time inside your browser (playback of the full GIF duration). Output is MP4 where your browser supports it, otherwise WebM.
+        </p>
+
+        <div class="tool-actions">
+          <button type="button" id="formatBackBtn" class="btn-ghost">Back</button>
+          <button type="button" id="formatGoBtn" class="btn-primary">Go!</button>
+        </div>
+      </div>
+
+      <div class="tool-detail" id="rotateView" hidden>
+        <h2 class="panel-title">Rotate &amp; Flip</h2>
+
+        <div class="field-group">
+          <span class="field-label">Rotate</span>
+          <div class="chip-row" id="rotateAngleChips">
+            <button type="button" class="chip active" data-angle="0">0&deg;</button>
+            <button type="button" class="chip" data-angle="90">90&deg;</button>
+            <button type="button" class="chip" data-angle="180">180&deg;</button>
+            <button type="button" class="chip" data-angle="270">270&deg;</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label">Flip</span>
+          <div class="chip-row" id="rotateFlipChips">
+            <button type="button" class="chip active" data-flip="none">None</button>
+            <button type="button" class="chip" data-flip="horizontal">Horizontal</button>
+            <button type="button" class="chip" data-flip="vertical">Vertical</button>
+          </div>
+        </div>
+
+        <div class="tool-actions">
+          <button type="button" id="rotateBackBtn" class="btn-ghost">Back</button>
+          <button type="button" id="rotateGoBtn" class="btn-primary">Go!</button>
+        </div>
+      </div>
+
+      <div class="tool-detail" id="optimizeView" hidden>
+        <h2 class="panel-title">Optimize</h2>
+        <p class="field-hint">
+          Losslessly removes duplicate consecutive frames (a common source of bloat in looping GIFs) and re-encodes the file. Resolution, colors, and visual quality are left untouched.
+        </p>
+
+        <div class="tool-actions">
+          <button type="button" id="optimizeBackBtn" class="btn-ghost">Back</button>
+          <button type="button" id="optimizeGoBtn" class="btn-primary">Go!</button>
+        </div>
+      </div>
+
+      <div class="tool-detail" id="reverseView" hidden>
+        <h2 class="panel-title">Reverse</h2>
+        <p class="field-hint">Plays the GIF animation backwards, frame by frame.</p>
+
+        <div class="tool-actions">
+          <button type="button" id="reverseBackBtn" class="btn-ghost">Back</button>
+          <button type="button" id="reverseGoBtn" class="btn-primary">Go!</button>
+        </div>
+      </div>
+
+      <div class="tool-detail" id="speedView" hidden>
+        <h2 class="panel-title">Speed</h2>
+
+        <div class="field-group">
+          <span class="field-label">Playback Speed</span>
+          <div class="option-control">
+            <input type="range" id="speedSlider" min="25" max="400" value="100" step="5" class="axis-slider" />
+            <span class="axis-value" id="speedValue">1x</span>
+          </div>
+        </div>
+
+        <div class="tool-actions">
+          <button type="button" id="speedBackBtn" class="btn-ghost">Back</button>
+          <button type="button" id="speedGoBtn" class="btn-primary">Go!</button>
+        </div>
+      </div>
+
+      <div class="tool-detail" id="cutView" hidden>
+        <h2 class="panel-title">Cut</h2>
+
+        <div class="field-group">
+          <span class="field-label">Start Frame</span>
+          <div class="option-control">
+            <input type="range" id="cutStartSlider" min="0" max="0" value="0" step="1" class="axis-slider" />
+            <span class="axis-value" id="cutStartValue"></span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label">End Frame</span>
+          <div class="option-control">
+            <input type="range" id="cutEndSlider" min="0" max="0" value="0" step="1" class="axis-slider" />
+            <span class="axis-value" id="cutEndValue"></span>
+          </div>
+        </div>
+
+        <div class="tool-actions">
+          <button type="button" id="cutBackBtn" class="btn-ghost">Back</button>
+          <button type="button" id="cutGoBtn" class="btn-primary">Go!</button>
+        </div>
+      </div>
+
+    </aside>
+  </section>
+
+</main>
+
+<script src="vendor/omggif.js"></script>
+<script src="vendor/gif.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

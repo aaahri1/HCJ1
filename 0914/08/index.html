@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video to GIF</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="https://nanalab.kr" target="_blank" rel="noopener noreferrer" class="logo-link">
+    <img src="logo.png" alt="logo" class="logo">
+  </a>
+  <div class="header-title">Video to GIF</div>
+</header>
+
+<main class="main">
+  <h1 class="hero-title">Video - GIF</h1>
+  <p class="hero-subtitle">Make your own GIF Animation!</p>
+
+  <div id="dropzone" class="dropzone">
+    <input type="file" id="fileInput" accept="video/*" multiple hidden>
+    <div class="dropzone-content">
+      <svg class="upload-icon" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 16V4m0 0-4 4m4-4 4 4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p class="dropzone-text">여기에 동영상 파일을 드래그 앤 드롭하세요</p>
+      <button type="button" id="uploadBtn" class="upload-btn">파일 업로드</button>
+      <p class="dropzone-hint">GIF는 최대 29FPS로 변환됩니다</p>
+    </div>
+  </div>
+
+  <section id="fileList" class="file-list"></section>
+</main>
+
+<script src="libs/gif.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

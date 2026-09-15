@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>드미트리 & 로렐라이 모바일 청첩장 | Always be with you</title>
+  
+  <!-- SEO & Open Graph Meta Tags -->
+  <meta name="description" content="드미트리 & 로렐라이의 결혼식에 소중한 분들을 초대합니다. 2099년 12월 26일 토요일 오후 12시 나나컨벤션센터">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="드미트리 & 로렐라이 결혼합니다">
+  <meta property="og:description" content="2099.12.26(토) 오후 12시 나나컨벤션센터 2층 플로렌스홀">
+  <meta property="og:image" content="pictures/함께1.png">
+  <meta name="theme-color" content="#FAF7F2">
+
+  <!-- Fonts: Google Fonts (Gowun Batang, Cormorant Garamond, Pretendard fallback) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Petals Canvas -->
+  <canvas id="petals-canvas"></canvas>
+
+  <!-- Sound / Ambient BGM Controller -->
+  <div class="audio-widget">
+    <button id="audio-toggle-btn" class="audio-btn" aria-label="음악 재생/일시정지" title="축하 음악 켜기/끄기">
+      <span class="audio-icon-wrap">
+        <svg class="icon-music on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18V5l12-2v13"></path>
+          <circle cx="6" cy="18" r="3"></circle>
+          <circle cx="18" cy="16" r="3"></circle>
+        </svg>
+        <span class="music-wave wave-1"></span>
+        <span class="music-wave wave-2"></span>
+      </span>
+      <span class="audio-text">BGM</span>
+    </button>
+  </div>
+
+  <!-- Mobile Container Wrapper -->
+  <div class="app-wrapper">
+    <main class="invitation-container" id="invitation-container">
+
+      <!-- 1. HERO COVER SECTION -->
+      <section class="hero-section" id="hero">
+        <div class="hero-header fade-in">
+          <span class="hero-sub">WEDDING INVITATION</span>
+          <h1 class="hero-title">Always be with you</h1>
+          <div class="hero-divider">
+            <span class="line"></span>
+            <span class="diamond">✧</span>
+            <span class="line"></span>
+          </div>
+        </div>
+
+        <div class="hero-image-frame fade-in">
+          <div class="image-inner">
+            <img src="pictures/함께1.png" alt="드미트리와 로렐라이 웨딩 사진" class="hero-img" id="hero-main-img">
+            <div class="hero-img-overlay"></div>
+          </div>
+          <div class="hero-badge">
+            <span>2099 . 12 . 26</span>
+          </div>
+        </div>
+
+        <div class="hero-couple-info fade-in">
+          <div class="couple-names">
+            <span class="groom-name">드미트리</span>
+            <span class="heart-symbol">♥</span>
+            <span class="bride-name">로렐라이</span>
+          </div>
+          <p class="hero-date-venue">
+            2099년 12월 26일 토요일 오후 12시<br>
+            나나컨벤션센터 2층 플로렌스홀
+          </p>
+        </div>
+
+        <div class="scroll-indicator">
+          <span class="scroll-text">SCROLL</span>
+          <div class="scroll-mouse">
+            <div class="scroll-wheel"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. INVITATION LETTER SECTION -->
+      <section class="section invitation-section" id="invitation">
+        <div class="section-badge fade-in">INVITATION</div>
+        <h2 class="section-title fade-in">초대합니다</h2>
+        
+        <div class="invitation-quote-box fade-in">
+          <p class="invitation-text">
+            저희의 영원한 사랑을<br>
+            깨지지 않는 약속으로 하늘에 아로새기어<br>
+            서로의 동반자가 되어 인생의 여정을 출발하고자 합니다.<br>
+            <br>
+            저희 두 사람의 약속이<br>
+            더욱 빛날 수 있도록<br>
+            부디 방문하시어 따뜻한 격려와 축복을 부탁드립니다.
+          </p>
+        </div>
+
+        <!-- Family relationship tree -->
+        <div class="family-relation-card fade-in">
+          <div class="relation-item">
+            <div class="parents-side">
+              <span class="parent">루크사트</span> · <span class="parent">파르벤</span>
+              <span class="relation-label">의 아들</span>
+            </div>
+            <div class="child-side groom">드미트리</div>
+          </div>
+          <div class="relation-divider"></div>
+          <div class="relation-item">
+            <div class="parents-side">
+              <span class="parent">마키아토</span> · <span class="parent">페르시카</span>
+              <span class="relation-label">의 딸</span>
+            </div>
+            <div class="child-side bride">로렐라이</div>
+          </div>
+        </div>
+
+        <!-- Direct Contact Buttons -->
+        <div class="contact-cta-wrap fade-in">
+          <button type="button" class="btn-contact btn-groom" id="btn-contact-groom" aria-label="신랑에게 연락하기">
+            <span class="btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+            </span>
+            <span class="btn-text">지금 신랑에게 연락하세요</span>
+          </button>
+
+          <button type="button" class="btn-contact btn-bride" id="btn-contact-bride" aria-label="신부에게 연락하기">
+            <span class="btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+            </span>
+            <span class="btn-text">지금 신부에게 연락하세요</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- 3. REAL-TIME COUNTDOWN & CALENDAR SECTION -->
+      <section class="section countdown-section" id="countdown">
+        <div class="section-badge fade-in">COUNTDOWN</div>
+        <h2 class="section-title fade-in">결혼식까지 남은 시간</h2>
+        
+        <p class="countdown-description fade-in">
+          드미트리 ♥ 로렐라이의 특별한 순간까지
+        </p>
+
+        <!-- Real-time dynamic timer cards -->
+        <div class="countdown-timer-container fade-in">
+          <div class="timer-unit-box" id="unit-days">
+            <div class="timer-card">
+              <span class="timer-number" id="count-days">--</span>
+            </div>
+            <span class="timer-unit-label">DAYS</span>
+          </div>
+          <span class="timer-separator">:</span>
+
+          <div class="timer-unit-box" id="unit-hours">
+            <div class="timer-card">
+              <span class="timer-number" id="count-hours">--</span>
+            </div>
+            <span class="timer-unit-label">HOURS</span>
+          </div>
+          <span class="timer-separator">:</span>
+
+          <div class="timer-unit-box" id="unit-minutes">
+            <div class="timer-card">
+              <span class="timer-number" id="count-minutes">--</span>
+            </div>
+            <span class="timer-unit-label">MINS</span>
+          </div>
+          <span class="timer-separator">:</span>
+
+          <div class="timer-unit-box" id="unit-seconds">
+            <div class="timer-card pulse-sec">
+              <span class="timer-number" id="count-seconds">--</span>
+            </div>
+            <span class="timer-unit-label">SECS</span>
+          </div>
+        </div>
+
+        <!-- D-Day Message Banner -->
+        <div class="dday-banner fade-in">
+          <span class="dday-sparkle">✨</span>
+          <span id="dday-summary-text">결혼식이 <strong id="dday-days-highlight">...</strong> 남았습니다</span>
+        </div>
+
+        <!-- 2099년 12월 미니 캘린더 -->
+        <div class="calendar-card fade-in">
+          <div class="calendar-header">
+            <span class="calendar-month">2099. 12</span>
+            <span class="calendar-sub">DECEMBER</span>
+          </div>
+          <div class="calendar-grid">
+            <span class="cal-day cal-sun">일</span>
+            <span class="cal-day">월</span>
+            <span class="cal-day">화</span>
+            <span class="cal-day">수</span>
+            <span class="cal-day">목</span>
+            <span class="cal-day">금</span>
+            <span class="cal-day cal-sat">토</span>
+
+            <!-- 2099년 12월 1일은 화요일 시작 -->
+            <span class="cal-cell empty"></span>
+            <span class="cal-cell empty"></span>
+            <span class="cal-cell">1</span>
+            <span class="cal-cell">2</span>
+            <span class="cal-cell">3</span>
+            <span class="cal-cell">4</span>
+            <span class="cal-cell cal-sat">5</span>
+
+            <span class="cal-cell cal-sun">6</span>
+            <span class="cal-cell">7</span>
+            <span class="cal-cell">8</span>
+            <span class="cal-cell">9</span>
+            <span class="cal-cell">10</span>
+            <span class="cal-cell">11</span>
+            <span class="cal-cell cal-sat">12</span>
+
+            <span class="cal-cell cal-sun">13</span>
+            <span class="cal-cell">14</span>
+            <span class="cal-cell">15</span>
+            <span class="cal-cell">16</span>
+            <span class="cal-cell">17</span>
+            <span class="cal-cell">18</span>
+            <span class="cal-cell cal-sat">19</span>
+
+            <span class="cal-cell cal-sun">20</span>
+            <span class="cal-cell">21</span>
+            <span class="cal-cell">22</span>
+            <span class="cal-cell">23</span>
+            <span class="cal-cell">24</span>
+            <span class="cal-cell">25</span>
+            <!-- 26일 결혼식 날짜 하이라이트 -->
+            <span class="cal-cell wedding-day active" id="wedding-calendar-cell">
+              <span class="wedding-heart-badge">♥</span>
+              <span class="cell-num">26</span>
+            </span>
+
+            <span class="cal-cell cal-sun">27</span>
+            <span class="cal-cell">28</span>
+            <span class="cal-cell">29</span>
+            <span class="cal-cell">30</span>
+            <span class="cal-cell">31</span>
+            <span class="cal-cell empty"></span>
+            <span class="cal-cell empty"></span>
+          </div>
+          <div class="calendar-footer">
+            <span>2099년 12월 26일 토요일 오후 12시 예식</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. PHOTO GALLERY SECTION -->
+      <section class="section gallery-section" id="gallery">
+        <div class="section-badge fade-in">GALLERY</div>
+        <h2 class="section-title fade-in">우리의 아름다운 순간</h2>
+        <p class="section-subtitle fade-in">사진을 터치하면 크게 보실 수 있습니다</p>
+
+        <div class="gallery-grid-container fade-in">
+          <!-- Item 1: Featured Main -->
+          <div class="gallery-item featured" data-index="0">
+            <div class="gallery-img-box">
+              <img src="pictures/함께1.png" alt="웨딩 사진 1" loading="lazy">
+              <div class="gallery-hover-overlay">
+                <span class="expand-icon">⤢</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2: Groom -->
+          <div class="gallery-item" data-index="1">
+            <div class="gallery-img-box">
+              <img src="pictures/신랑.png" alt="신랑 사진" loading="lazy">
+              <div class="gallery-hover-overlay">
+                <span class="expand-icon">⤢</span>
+              </div>
+            </div>
+            <div class="photo-caption">Groom Dmitry</div>
+          </div>
+
+          <!-- Item 3: Bride -->
+          <div class="gallery-item" data-index="2">
+            <div class="gallery-img-box">
+              <img src="pictures/신부.png" alt="신부 사진" loading="lazy">
+              <div class="gallery-hover-overlay">
+                <span class="expand-icon">⤢</span>
+              </div>
+            </div>
+            <div class="photo-caption">Bride Lorelei</div>
+          </div>
+
+          <!-- Item 4: Together 2 -->
+          <div class="gallery-item" data-index="3">
+            <div class="gallery-img-box">
+              <img src="pictures/함께2.png" alt="웨딩 사진 2" loading="lazy">
+              <div class="gallery-hover-overlay">
+                <span class="expand-icon">⤢</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 5: Together 3 -->
+          <div class="gallery-item" data-index="4">
+            <div class="gallery-img-box">
+              <img src="pictures/함께3.png" alt="웨딩 사진 3" loading="lazy">
+              <div class="gallery-hover-overlay">
+                <span class="expand-icon">⤢</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. LOCATION / MAP GUIDE SECTION -->
+      <section class="section location-section" id="location">
+        <div class="section-badge fade-in">LOCATION</div>
+        <h2 class="section-title fade-in">오시는 길</h2>
+
+        <div class="hall-info-card fade-in">
+          <h3 class="hall-name">나나컨벤션센터 2층 플로렌스홀</h3>
+          <p class="hall-address" id="venue-address">서울특별시 강남구 테헤란로 123 나나컨벤션타워</p>
+          <button type="button" class="btn-copy-address" id="btn-copy-address" aria-label="주소 복사">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="copy-svg">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>주소 복사하기</span>
+          </button>
+        </div>
+
+        <!-- Visual Map Preview Card -->
+        <div class="map-container fade-in">
+          <div class="map-visual-card">
+            <div class="map-bg-pattern">
+              <div class="map-road road-horizontal"></div>
+              <div class="map-road road-vertical"></div>
+              <div class="map-intersection"></div>
+              <div class="map-pin-pulse"></div>
+              <div class="map-marker-pin">
+                <span class="pin-icon">📍</span>
+                <span class="pin-title">나나컨벤션센터 2F</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Shortcut Buttons -->
+          <div class="nav-app-buttons">
+            <a href="https://map.naver.com" target="_blank" rel="noopener noreferrer" class="nav-btn naver-btn">
+              <span class="nav-logo naver-n">N</span>
+              <span>네이버지도</span>
+            </a>
+            <a href="https://map.kakao.com" target="_blank" rel="noopener noreferrer" class="nav-btn kakao-btn">
+              <span class="nav-logo kakao-k">K</span>
+              <span>카카오맵</span>
+            </a>
+            <a href="https://tmap.co.kr" target="_blank" rel="noopener noreferrer" class="nav-btn tmap-btn">
+              <span class="nav-logo tmap-t">T</span>
+              <span>티맵</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Transportation Instructions -->
+        <div class="traffic-info-card fade-in">
+          <div class="traffic-row">
+            <div class="traffic-badge subway">지하철</div>
+            <div class="traffic-desc">
+              <strong>2호선 / 신분당선 강남역</strong> 1번 출구 도보 3분<br>
+              <strong>9호선 신논현역</strong> 6번 출구 도보 7분
+            </div>
+          </div>
+          <div class="traffic-divider"></div>
+          <div class="traffic-row">
+            <div class="traffic-badge bus">버스</div>
+            <div class="traffic-desc">
+              <strong>강남역 / 나나컨벤션 정류장</strong> 하차<br>
+              간선: 140, 400, 420, 470, 741<br>
+              지선: 3412, 4312 | 광역: 9404, 9408
+            </div>
+          </div>
+          <div class="traffic-divider"></div>
+          <div class="traffic-row">
+            <div class="traffic-badge car">자가용 & 주차</div>
+            <div class="traffic-desc">
+              건물 내 지하 2층 ~ 지하 5층 하객 전용 주차장<br>
+              <strong>하객 2시간 무료 주차 지원</strong> (안내데스크 등록)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. ACCOUNT / 마음 전하시는 곳 SECTION -->
+      <section class="section account-section" id="account">
+        <div class="section-badge fade-in">HEART</div>
+        <h2 class="section-title fade-in">마음 전하시는 곳</h2>
+        <p class="account-subtitle fade-in">
+          참석이 어려워 멀리서 축복을 보내주시는 분들의<br>
+          소중하고 따뜻한 마음 감사히 간직하겠습니다.
+        </p>
+
+        <!-- Groom Bank Account Box -->
+        <div class="account-box-group fade-in">
+          <div class="account-card" id="card-groom-account">
+            <div class="account-header">
+              <div class="side-badge groom">신랑측 계좌번호</div>
+              <button type="button" class="accordion-toggle" aria-expanded="true" aria-controls="groom-acc-content">
+                <span class="toggle-text">접기</span>
+                <span class="toggle-arrow open">▾</span>
+              </button>
+            </div>
+            <div class="account-content open" id="groom-acc-content">
+              <div class="account-detail-row">
+                <div class="bank-info">
+                  <span class="bank-name">샤드은행</span>
+                  <span class="acc-num" id="groom-account-number">100-0000-00000</span>
+                  <span class="acc-holder">(예금주: 파르벤)</span>
+                </div>
+                <button type="button" class="btn-copy-acc" data-copy="샤드은행 100-0000-00000 파르벤" aria-label="신랑측 계좌번호 복사">
+                  <span>복사하기</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bride Bank Account Box -->
+          <div class="account-card" id="card-bride-account">
+            <div class="account-header">
+              <div class="side-badge bride">신부측 계좌번호</div>
+              <button type="button" class="accordion-toggle" aria-expanded="true" aria-controls="bride-acc-content">
+                <span class="toggle-text">접기</span>
+                <span class="toggle-arrow open">▾</span>
+              </button>
+            </div>
+            <div class="account-content open" id="bride-acc-content">
+              <div class="account-detail-row">
+                <div class="bank-info">
+                  <span class="bank-name">크레딧은행</span>
+                  <span class="acc-num" id="bride-account-number">100-0000-0000</span>
+                  <span class="acc-holder">(예금주: 페르시카)</span>
+                </div>
+                <button type="button" class="btn-copy-acc" data-copy="크레딧은행 100-0000-0000 페르시카" aria-label="신부측 계좌번호 복사">
+                  <span>복사하기</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. GUESTBOOK / 축하 메시지 남기기 -->
+      <section class="section guestbook-section" id="guestbook">
+        <div class="section-badge fade-in">GUESTBOOK</div>
+        <h2 class="section-title fade-in">축하의 한마디</h2>
+        <p class="section-subtitle fade-in">두 사람의 새로운 시작을 함께 축복해주세요</p>
+
+        <!-- Guestbook input form -->
+        <form id="guestbook-form" class="guestbook-form fade-in">
+          <div class="form-row">
+            <input type="text" id="guest-name" class="form-input" placeholder="작성자 성함" maxlength="15" required>
+            <input type="text" id="guest-relationship" class="form-input" placeholder="관계 (예: 신랑 친구, 신부 직장 동료)" maxlength="15">
+          </div>
+          <div class="form-row">
+            <textarea id="guest-message" class="form-textarea" placeholder="신랑 신부에게 따뜻한 축하 메시지를 남겨주세요." rows="3" maxlength="300" required></textarea>
+          </div>
+          <button type="submit" class="btn-submit-guestbook">
+            <span>축하 메시지 등록하기</span>
+            <span class="send-icon">💌</span>
+          </button>
+        </form>
+
+        <!-- Guestbook messages list -->
+        <div class="guestbook-list-wrap fade-in">
+          <div id="guestbook-list" class="guestbook-list">
+            <!-- Messages rendered dynamically by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. SHARE & FOOTER -->
+      <section class="section share-section" id="share">
+        <div class="share-box fade-in">
+          <h3 class="share-title">청첩장 공유하기</h3>
+          <p class="share-desc">소중한 분들에게 모바일 청첩장을 전달해보세요</p>
+          <div class="share-btn-group">
+            <button type="button" class="btn-share-kakao" id="btn-share-kakao">
+              <span class="share-icon">💬</span>
+              <span>카카오톡 공유</span>
+            </button>
+            <button type="button" class="btn-share-link" id="btn-share-link">
+              <span class="share-icon">🔗</span>
+              <span>링크 주소 복사</span>
+            </button>
+          </div>
+        </div>
+
+        <footer class="footer-wrap fade-in">
+          <div class="footer-heart">♥</div>
+          <p class="footer-names">드미트리 & 로렐라이</p>
+          <p class="footer-phrase">Always be with you</p>
+          <p class="footer-copyright">2099.12.26 SAT PM 12:00 | Nana Convention Center</p>
+        </footer>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- CONTACT MODAL (POPUP FOR CALL / SMS) -->
+  <div class="modal-overlay" id="contact-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="contact-modal-title">연락하기</h3>
+        <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="닫기">&times;</button>
+      </div>
+      <div class="modal-body" id="contact-modal-body">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY LIGHTBOX MODAL -->
+  <div class="lightbox-overlay" id="gallery-lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+    <button type="button" class="lightbox-close" id="lightbox-close-btn" aria-label="닫기">&times;</button>
+    
+    <div class="lightbox-content">
+      <button type="button" class="lightbox-nav prev" id="lightbox-prev-btn" aria-label="이전 사진">&#10094;</button>
+      
+      <div class="lightbox-img-wrap">
+        <img src="" alt="확대된 웨딩 사진" id="lightbox-main-img">
+        <div class="lightbox-counter" id="lightbox-counter">1 / 5</div>
+      </div>
+
+      <button type="button" class="lightbox-nav next" id="lightbox-next-btn" aria-label="다음 사진">&#10095;</button>
+    </div>
+  </div>
+
+  <!-- FLOATING TOAST NOTIFICATION -->
+  <div class="toast-notification" id="toast-message" role="status" aria-live="polite">
+    <span class="toast-icon">✓</span>
+    <span class="toast-text" id="toast-text">클립보드에 복사되었습니다.</span>
+  </div>
+
+  <!-- Javascript -->
+  <script src="app.js"></script>
+</body>
+</html>

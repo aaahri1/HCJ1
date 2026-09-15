@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Doc Compressor | 스마트 오피스 문서 용량 압축기</title>
+  <meta name="description" content="실제 압축이 가능한 PPTX, DOCX 문서의 이미지와 스트림을 브라우저에서 안전하고 빠르게 최적화하는 스마트 압축기.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Global Background Elements -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-grid-pattern"></div>
+
+  <!-- App Wrapper -->
+  <div class="app-container">
+    
+    <!-- Top Header (Requirements 1, 2) -->
+    <header class="main-header" id="mainHeader">
+      <div class="header-left">
+        <a href="https://nanalab.kr" target="_blank" rel="noopener noreferrer" class="logo-link" title="나나라보 가기 (https://nanalab.kr)">
+          <img src="logo.png" alt="Nana Company Logo" class="brand-logo" id="brandLogo">
+        </a>
+      </div>
+      <div class="header-right">
+        <div class="app-title-badge">
+          <span class="pulse-dot"></span>
+          <h1 class="app-title" id="appTitle">Smart Doc Compressor</h1>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Hero & Upload Section -->
+      <section class="hero-section">
+        <div class="hero-badge">
+          <svg class="sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
+          </svg>
+          실제 용량 최적화 엔진 탑재
+        </div>
+        
+        <h2 class="hero-heading">문서 파일 용량을 손쉽게 압축하세요</h2>
+        <p class="hero-subtext">브라우저에서 실제 용량 축소가 가능한 문서(PPTX, DOCX)의 미디어와 스트림을 직접 재압축합니다.</p>
+
+        <!-- Dropzone Container (Requirements 3, 4, 5) -->
+        <div class="dropzone-card" id="dropzoneCard">
+          <input type="file" id="fileInput" class="file-input" multiple accept=".pptx,.docx">
+          
+          <div class="dropzone-content">
+            <div class="dropzone-icon-ring">
+              <div class="icon-pulse-wave"></div>
+              <svg class="upload-cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
+                <path d="M12 12v9"/>
+                <path d="m16 16-4-4-4 4"/>
+              </svg>
+            </div>
+
+            <!-- Requirement 3: 화면 중앙 문구 -->
+            <h3 class="dropzone-title" id="dropzonePrompt">Upload or Drop your file!</h3>
+            <p class="dropzone-desc">압축 가능한 문서를 끌어다 놓거나, 아래 버튼을 눌러 선택하세요</p>
+
+            <!-- Requirement 4: 버튼 눌러서 업로드 -->
+            <div class="dropzone-actions">
+              <button type="button" class="btn btn-primary upload-btn" id="uploadBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <span>파일 선택하기 (PPTX, DOCX)</span>
+              </button>
+            </div>
+
+            <!-- Requirement 6: 지원 파일 및 압축 불가 차단 파일 안내 -->
+            <div class="supported-formats" id="supportedFormats">
+              <div class="formats-group">
+                <span class="format-group-label active-label">✓ 압축 가능 (업로드 허용):</span>
+                <div class="format-chips">
+                  <!-- PPT Chip -->
+                  <div class="format-chip chip-ppt active-chip" title="파워포인트 프레젠테이션 지원 (.pptx)">
+                    <div class="chip-icon">
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                        <path d="M14 2v6h6" fill="rgba(255,255,255,0.4)"/>
+                        <text x="12" y="18" font-size="7" font-weight="900" text-anchor="middle" fill="#ffffff">PPTX</text>
+                      </svg>
+                    </div>
+                    <span class="chip-text">PPTX</span>
+                  </div>
+
+                  <!-- DOC Chip -->
+                  <div class="format-chip chip-doc active-chip" title="MS 워드 문서 지원 (.docx)">
+                    <div class="chip-icon">
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                        <path d="M14 2v6h6" fill="rgba(255,255,255,0.4)"/>
+                        <text x="12" y="18" font-size="7" font-weight="900" text-anchor="middle" fill="#ffffff">DOCX</text>
+                      </svg>
+                    </div>
+                    <span class="chip-text">DOCX</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="formats-group blocked-group">
+                <span class="format-group-label blocked-label">✕ 압축 불가 (업로드 차단):</span>
+                <div class="format-chips">
+                  <!-- Blocked PDF Chip -->
+                  <div class="format-chip chip-blocked" title="브라우저 환경에서 실제 무손실 압축이 불가하여 업로드가 제한됩니다.">
+                    <span class="blocked-x">✕</span>
+                    <span class="chip-text strike">PDF</span>
+                  </div>
+
+                  <!-- Blocked HWP Chip -->
+                  <div class="format-chip chip-blocked" title="한글 바이너리 포맷은 브라우저 압축이 불가하여 업로드가 제한됩니다.">
+                    <span class="blocked-x">✕</span>
+                    <span class="chip-text strike">HWP</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Drag Hover Overlay -->
+          <div class="drag-overlay" id="dragOverlay">
+            <div class="drag-overlay-box">
+              <svg class="bounce-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 4v12m0 0 4-4m-4 4-4-4"/>
+                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+              </svg>
+              <span>PPTX, DOCX 파일을 여기에 놓아주세요!</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compression Settings Bar -->
+        <div class="settings-bar">
+          <div class="setting-item">
+            <label for="compressionLevel" class="setting-label">이미지 및 스트림 압축 모드</label>
+            <select id="compressionLevel" class="select-input">
+              <option value="balanced" selected>균형 모드 (이미지 품질 75% + DEFLATE 최대 압축)</option>
+              <option value="maximum">최대 압축 모드 (이미지 해상도 조정 + 고압축 55% 품질)</option>
+              <option value="lossless">무손실 모드 (원본 이미지 유지 + XML 스트림 압축)</option>
+            </select>
+          </div>
+          <div class="stats-summary" id="statsSummary" style="display: none;">
+            <div class="stat-pill">
+              <span class="stat-title">총 파일:</span>
+              <strong id="totalFilesCount">0</strong>개
+            </div>
+            <div class="stat-pill">
+              <span class="stat-title">실제 절감 용량:</span>
+              <strong id="totalSavedSize" class="text-accent">0 MB</strong>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="downloadAllBtn" style="display: none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              전체 다운로드
+            </button>
+            <button type="button" class="btn btn-ghost btn-sm" id="clearAllBtn" title="목록 지우기">
+              목록 지우기
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Requirements 7, 8, 9, 10: 파일별 프로그레스 바 목록 & 다운로드 -->
+      <section class="files-queue-section" id="filesQueueSection" style="display: none;">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <h3 class="section-title">압축 진행 대기열</h3>
+            <span class="badge badge-count" id="queueCountBadge">0</span>
+          </div>
+          <span class="section-hint">각 파일별로 내부 미디어 및 스트림을 독립적으로 실제 압축합니다</span>
+        </div>
+
+        <!-- Files List -->
+        <div class="files-list" id="filesList">
+          <!-- Dynamically populated file cards -->
+        </div>
+      </section>
+
+      <!-- Feature Benefits Grid -->
+      <section class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon feature-shield">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h4>100% 안전한 로컬 실시간 압축</h4>
+          <p>문서가 외부 서버로 전송되지 않고 브라우저 내에서 직접 OpenXML 패키지를 열어 이미지와 스트림을 압축하므로 기밀 문서도 안전합니다.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon feature-speed">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <h4>독립적 비동기 진행률 추적</h4>
+          <p>여러 개의 대용량 문서를 동시에 올려도 각 파일마다 독립적인 프로그레스 바를 통해 미디어 압축과 패키징 단계를 실시간 추적합니다.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon feature-naming">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </div>
+          <h4>스마트 파일명 관리</h4>
+          <p>압축이 완료되면 <code>compressed 원본파일명</code> 형태로 실제 용량이 줄어든 파일이 다운로드되어 원본과 혼동 없이 보관할 수 있습니다.</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-inner">
+        <p class="copyright">© 2026 Smart Doc Compressor • <a href="https://nanalab.kr" target="_blank" rel="noopener noreferrer">나나라보 (nanalab.kr)</a></p>
+        <div class="footer-links">
+          <span>지원 포맷: PPTX • DOCX (PDF, HWP는 실제 압축 불가로 차단)</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Local JSZip Library for 100% Offline & Reliable Client-side Compression -->
+  <script src="jszip.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
