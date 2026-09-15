@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF 병합기</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>PDF 병합기</h1>
+      <p class="subtitle">여러 개의 PDF 파일을 업로드하고 순서를 정한 뒤 하나로 합쳐보세요.</p>
+    </header>
+
+    <main>
+      <div id="drop-zone" class="drop-zone">
+        <input type="file" id="file-input" accept="application/pdf" multiple hidden />
+        <div class="drop-zone-content">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 16V4M12 4L7 9M12 4l5 5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p><strong>클릭하여 선택</strong> 또는 파일을 여기로 드래그하세요</p>
+          <p class="hint">PDF 파일만 가능 · 여러 개 선택 가능</p>
+        </div>
+      </div>
+
+      <section id="file-list-section" class="file-list-section" hidden>
+        <div class="section-header">
+          <h2>업로드된 파일 (<span id="file-count">0</span>)</h2>
+          <button id="clear-all-btn" class="btn btn-ghost">전체 삭제</button>
+        </div>
+        <ul id="file-list" class="file-list"></ul>
+      </section>
+
+      <div class="actions">
+        <button id="merge-btn" class="btn btn-primary" disabled>PDF 병합하기</button>
+      </div>
+
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+
+      <div id="result" class="result" hidden>
+        <p>✅ 병합이 완료되었습니다!</p>
+        <a id="download-link" class="btn btn-primary" download="merged.pdf">병합된 PDF 다운로드</a>
+      </div>
+    </main>
+
+    <footer>
+      <p>모든 처리는 브라우저 안에서만 이루어지며, 파일은 서버로 전송되지 않습니다.</p>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

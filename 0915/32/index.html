@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>오디오 편집기</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎧</text></svg>" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-icon">🎧</span>
+      <div class="brand-text">
+        <h1>오디오 편집기</h1>
+        <p>업로드 · 트림 · 볼륨 · 포맷 변환까지, 브라우저에서 바로</p>
+      </div>
+    </div>
+    <button id="themeToggle" class="icon-btn" title="테마 전환" aria-label="테마 전환">🌙</button>
+  </header>
+
+  <section id="uploadSection" class="card upload-card">
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="오디오 파일 업로드">
+      <div class="drop-zone-icon">🎵</div>
+      <p class="drop-zone-title">오디오 파일을 끌어다 놓거나 클릭해서 업로드</p>
+      <p class="drop-zone-sub">MP3, WAV, OGG, M4A 등 지원 · 파일은 브라우저 밖으로 전송되지 않습니다</p>
+      <input type="file" id="fileInput" accept="audio/*" hidden />
+    </div>
+  </section>
+
+  <section id="editorSection" class="editor hidden">
+    <div class="card file-bar">
+      <div class="file-bar-main">
+        <span class="file-icon">🎶</span>
+        <div class="file-meta">
+          <div class="file-name" id="fileNameLabel">-</div>
+          <div class="file-sub" id="fileSubLabel">-</div>
+        </div>
+      </div>
+      <button id="changeFileBtn" class="btn btn-ghost btn-small">다른 파일 선택</button>
+    </div>
+
+    <div class="card player-card">
+      <div class="waveform-wrap" id="waveformWrap">
+        <canvas id="waveformCanvas" height="140"></canvas>
+        <div id="selectionOverlay" class="selection-overlay">
+          <div id="selectionRegion" class="selection-region"></div>
+          <div id="startHandle" class="handle" data-handle="start"><span class="handle-grip"></span></div>
+          <div id="endHandle" class="handle" data-handle="end"><span class="handle-grip"></span></div>
+          <div id="playhead" class="playhead"></div>
+        </div>
+        <div id="hoverTime" class="hover-time"></div>
+      </div>
+      <div class="time-row">
+        <span id="currentTimeLabel">00:00.00</span>
+        <span id="selectionInfo" class="selection-info"></span>
+        <span id="durationLabel">00:00.00</span>
+      </div>
+
+      <div class="transport">
+        <button id="playBtn" class="btn btn-primary btn-round" title="재생 (Space)">▶</button>
+        <button id="pauseBtn" class="btn btn-round" disabled title="일시정지 (Space)">⏸</button>
+        <button id="stopBtn" class="btn btn-round" disabled title="정지">⏹</button>
+        <div class="transport-divider"></div>
+        <button id="resetBtn" class="btn btn-ghost btn-small">↺ 원본으로 되돌리기</button>
+      </div>
+    </div>
+
+    <div class="tools-grid">
+      <div class="card panel">
+        <div class="panel-head"><span class="panel-badge">1</span><h3>구간 트림 <span class="panel-sub">Trim</span></h3></div>
+        <div class="controls-row">
+          <label>시작 <input type="text" id="trimStartInput" class="time-input" value="00:00.00" /></label>
+          <button id="setStartBtn" class="btn btn-small" title="현재 재생 위치를 시작 지점으로">현재 위치로</button>
+        </div>
+        <div class="controls-row">
+          <label>끝 <input type="text" id="trimEndInput" class="time-input" value="00:00.00" /></label>
+          <button id="setEndBtn" class="btn btn-small" title="현재 재생 위치를 끝 지점으로">현재 위치로</button>
+        </div>
+        <div class="controls-row panel-actions">
+          <button id="applyTrimBtn" class="btn btn-primary">✂ 선택 구간 자르기</button>
+          <button id="resetTrimBtn" class="btn btn-ghost btn-small">전체 선택</button>
+        </div>
+      </div>
+
+      <div class="card panel">
+        <div class="panel-head"><span class="panel-badge">2</span><h3>볼륨 조절 <span class="panel-sub">Volume</span></h3></div>
+        <div class="volume-control">
+          <span class="volume-icon" id="volumeIcon">🔊</span>
+          <input type="range" id="volumeSlider" min="0" max="200" value="100" step="1" />
+          <span id="volumeLabel" class="volume-value">100%</span>
+        </div>
+        <div class="controls-row preset-row">
+          <button type="button" class="btn btn-chip" data-volume="50">50%</button>
+          <button type="button" class="btn btn-chip" data-volume="100">100%</button>
+          <button type="button" class="btn btn-chip" data-volume="150">150%</button>
+          <button type="button" class="btn btn-chip" data-volume="200">200%</button>
+        </div>
+        <div class="controls-row panel-actions">
+          <button id="applyVolumeBtn" class="btn btn-primary">✔ 볼륨 변경 적용</button>
+        </div>
+        <p class="hint">슬라이더는 재생 중 실시간 미리듣기에 반영됩니다. "적용"을 눌러야 실제로 저장됩니다.</p>
+      </div>
+
+      <div class="card panel panel-wide">
+        <div class="panel-head"><span class="panel-badge">3</span><h3>포맷 변환 &amp; 내보내기 <span class="panel-sub">Export</span></h3></div>
+        <div class="controls-row">
+          <div class="format-options" id="formatOptions">
+            <button type="button" class="format-btn active" data-format="wav">WAV<span>무손실</span></button>
+            <button type="button" class="format-btn" data-format="mp3">MP3<span>압축</span></button>
+          </div>
+          <label id="bitrateWrap">비트레이트
+            <select id="bitrateSelect">
+              <option value="128">128 kbps</option>
+              <option value="192" selected>192 kbps</option>
+              <option value="320">320 kbps</option>
+            </select>
+          </label>
+        </div>
+        <div class="controls-row panel-actions">
+          <button id="exportBtn" class="btn btn-primary btn-large">⬇ 내보내기 (다운로드)</button>
+        </div>
+        <p id="exportStatus" class="hint status-line"></p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="js/lib/lame.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자리비움 안내판</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 설정 화면 -->
+  <section id="setup-screen" class="screen active">
+    <div class="setup-card">
+      <p class="eyebrow">AWAY SCREEN</p>
+      <h1>자리비움 안내판</h1>
+      <p class="subtitle">잠시 자리를 비울 때 화면에 안내 정보를 표시해요.</p>
+
+      <form id="setup-form">
+        <label class="field">
+          <span class="field-label">일정 <em>*</em></span>
+          <input type="text" id="scheduleInput" placeholder="예: 회의중, 점심시간, 외근중" maxlength="30" required>
+        </label>
+
+        <label class="field">
+          <span class="field-label">돌아오는 시간 <em>*</em></span>
+          <input type="text" id="returnTimeInput" inputmode="numeric" autocomplete="off" placeholder="예: 14:30, 1430, 14시 30분" maxlength="12">
+          <div class="quick-picks" id="quickPicks">
+            <button type="button" class="quick-btn" data-minutes="10">10분 후</button>
+            <button type="button" class="quick-btn" data-minutes="30">30분 후</button>
+            <button type="button" class="quick-btn" data-minutes="60">1시간 후</button>
+            <button type="button" class="quick-btn" data-minutes="120">2시간 후</button>
+          </div>
+        </label>
+
+        <label class="field">
+          <span class="field-label">기타 문구 <span class="optional">(선택)</span></span>
+          <textarea id="extraInput" placeholder="예: 급한 용무는 010-1234-5678로 연락주세요" maxlength="80" rows="2"></textarea>
+        </label>
+
+        <p id="errorMsg" class="error-msg" hidden></p>
+
+        <button type="submit" class="confirm-btn">확인</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 표시 화면 -->
+  <section id="display-screen" class="screen">
+    <div class="gradient-bg"></div>
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+    <div class="blob blob-c"></div>
+
+    <div class="content">
+      <p class="status-label">현재 자리 비움</p>
+      <h2 class="schedule-text" id="scheduleText">회의중</h2>
+
+      <div class="return-info">
+        <div class="return-time">
+          <span class="return-time-label">복귀 예정</span>
+          <span class="return-time-value" id="returnTimeText">14:30</span>
+        </div>
+        <div class="divider"></div>
+        <div class="countdown">
+          <span class="countdown-label" id="countdownLabel">남은 시간</span>
+          <span class="countdown-value" id="countdownText">00:00:00</span>
+        </div>
+      </div>
+
+      <p class="extra-text" id="extraText"></p>
+    </div>
+
+    <div class="controls">
+      <button id="fullscreenBtn" class="icon-btn" title="전체화면">⛶</button>
+      <button id="editBtn" class="icon-btn" title="수정하기">✎</button>
+    </div>
+  </section>
+
+  <!-- 전환 애니메이션 오버레이 -->
+  <div id="transitionOverlay"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

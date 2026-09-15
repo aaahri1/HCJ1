@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lorem Ipsum 생성기</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="card">
+    <header>
+      <h1>Lorem Ipsum 생성기</h1>
+      <p class="subtitle">슬라이더를 움직여 원하는 글자 분량을 만들어보세요.</p>
+    </header>
+
+    <section class="controls">
+      <div class="controls-row">
+        <label for="length-slider">글자 수</label>
+        <input
+          id="length-input"
+          type="number"
+          min="10"
+          max="5000"
+          value="150"
+          aria-label="글자 수 직접 입력"
+        />
+      </div>
+      <input
+        id="length-slider"
+        type="range"
+        min="10"
+        max="5000"
+        value="150"
+        step="1"
+      />
+      <div class="range-labels">
+        <span>10</span>
+        <span>5000</span>
+      </div>
+    </section>
+
+    <section class="output-wrap">
+      <div class="output-header">
+        <span id="char-count">150자</span>
+        <button id="copy-btn" type="button">복사</button>
+      </div>
+      <textarea id="output" readonly></textarea>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

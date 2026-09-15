@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>문서 분석기</title>
+<style>
+  :root {
+    --bg: #f5f6fa;
+    --card-bg: #ffffff;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Apple SD Gothic Neo", "Malgun Gothic", -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+  }
+  h1 {
+    font-size: 22px;
+    margin: 0 0 8px;
+  }
+  p.sub {
+    margin: 0 0 24px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  #dropzone {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 32px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  #dropzone.dragover {
+    border-color: var(--accent);
+    background: #eef2ff;
+  }
+  #dropzone p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  #dropzone .icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  input[type="file"] { display: none; }
+  #filename {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 600;
+    word-break: break-all;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  button:hover:not(:disabled) { background: var(--accent-hover); }
+  button:disabled { background: #c7c9d9; cursor: not-allowed; }
+  #results {
+    margin-top: 24px;
+    display: none;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { color: var(--muted); }
+  .stat-value { font-weight: 700; }
+  #error {
+    margin-top: 16px;
+    color: #dc2626;
+    font-size: 13px;
+    display: none;
+  }
+  #loading {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 13px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>문서 분석기</h1>
+    <p class="sub">PDF 또는 DOCX 파일을 업로드하면 글자 수, 단어 수, 공백 개수, 이미지 개수를 알려드립니다.</p>
+
+    <div id="dropzone">
+      <div class="icon">📄</div>
+      <p>클릭하거나 파일을 이곳에 끌어다 놓으세요<br>(PDF, DOCX)</p>
+      <div id="filename"></div>
+    </div>
+    <input type="file" id="fileInput" accept=".pdf,.docx">
+
+    <button id="analyzeBtn" disabled>분석하기</button>
+
+    <div id="loading">분석 중입니다...</div>
+    <div id="error"></div>
+
+    <div id="results">
+      <div class="stat-row">
+        <span class="stat-label">전체 글자 수 (공백 포함)</span>
+        <span class="stat-value" id="charsWithSpace">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">전체 글자 수 (공백 제외)</span>
+        <span class="stat-value" id="charsWithoutSpace">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">단어 수</span>
+        <span class="stat-value" id="wordCount">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">공백 개수</span>
+        <span class="stat-value" id="spaceCount">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">이미지 개수</span>
+        <span class="stat-value" id="imageCount">-</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const filenameEl = document.getElementById('filename');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  const resultsEl = document.getElementById('results');
+  const errorEl = document.getElementById('error');
+  const loadingEl = document.getElementById('loading');
+
+  let selectedFile = null;
+
+  function setFile(file) {
+    if (!file) return;
+    const ext = file.name.toLowerCase().slice(file.name.lastIndexOf('.'));
+    if (ext !== '.pdf' && ext !== '.docx') {
+      showError('PDF 또는 DOCX 파일만 업로드할 수 있습니다.');
+      return;
+    }
+    selectedFile = file;
+    filenameEl.textContent = file.name;
+    analyzeBtn.disabled = false;
+    hideError();
+    resultsEl.style.display = 'none';
+  }
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.style.display = 'block';
+  }
+
+  function hideError() {
+    errorEl.style.display = 'none';
+  }
+
+  dropzone.addEventListener('click', () => fileInput.click());
+
+  dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+
+  dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('dragover');
+  });
+
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) {
+      setFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      setFile(fileInput.files[0]);
+    }
+  });
+
+  analyzeBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
+
+    hideError();
+    resultsEl.style.display = 'none';
+    loadingEl.style.display = 'block';
+    analyzeBtn.disabled = true;
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      const res = await fetch('/analyze', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showError(data.error || '분석에 실패했습니다.');
+        return;
+      }
+
+      document.getElementById('charsWithSpace').textContent = data.charsWithSpace.toLocaleString();
+      document.getElementById('charsWithoutSpace').textContent = data.charsWithoutSpace.toLocaleString();
+      document.getElementById('wordCount').textContent = data.wordCount.toLocaleString();
+      document.getElementById('spaceCount').textContent = data.spaceCount.toLocaleString();
+      document.getElementById('imageCount').textContent = data.imageCount.toLocaleString();
+      resultsEl.style.display = 'block';
+    } catch (err) {
+      showError('서버와 통신 중 오류가 발생했습니다.');
+    } finally {
+      loadingEl.style.display = 'none';
+      analyzeBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

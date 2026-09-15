@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>문서 요약기 (TextRank)</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>문서 요약기</h1>
+      <p class="subtitle">PDF 또는 DOCX 파일을 업로드하면 TextRank 알고리즘으로 핵심 문장만 추려드려요.</p>
+    </header>
+
+    <section class="card">
+      <form id="upload-form">
+        <label class="dropzone" id="dropzone" for="file-input">
+          <span id="dropzone-text">클릭하거나 파일을 끌어다 놓으세요 (PDF / DOCX, 최대 20MB)</span>
+          <input type="file" id="file-input" name="file" accept=".pdf,.docx" hidden />
+        </label>
+
+        <div class="slider-row">
+          <label for="sentence-slider">요약 분량: <strong id="sentence-value">3</strong>문장</label>
+          <input type="range" id="sentence-slider" min="1" max="5" value="3" step="1" />
+          <div class="slider-ticks">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn" disabled>요약하기</button>
+      </form>
+
+      <div id="status" class="status" hidden></div>
+    </section>
+
+    <section class="card result-card" id="result-card" hidden>
+      <div class="result-header">
+        <h2>요약 결과</h2>
+        <span id="result-meta" class="result-meta"></span>
+      </div>
+      <ol id="summary-list"></ol>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
